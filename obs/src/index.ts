@@ -1,25 +1,37 @@
 import "dotenv/config";
-import { OBSRepository } from "./services/OBSRepository";
-import { OBSCallable } from "./models/OBSModels";
-import OBSWebSocket from "obs-websocket-js";
+import { OBSService } from "./services/OBSService";
 
-const obs = new OBSRepository();
+const obs = new OBSService();
 
 (async () => {
   await obs.connect();
 
-  const name = await obs.getCurrentScene();
-  console.log(name, "test");
+  const currentSceneName = await obs.getCurrentScene();
 
-  const sources = await obs.getSceneSourcesList(name);
+  console.log(currentSceneName);
 
-  const sceneItemId = await obs.getSceneItemId(name, "GroupSecondaryCam");
+  const sources = await obs.getSceneSourcesList(currentSceneName);
 
-  await obs.setSceneItemEnabled({
-    sceneItemId,
-    sceneName: name,
-    enabled: true,
+  const sceneItem = await obs.getSceneItem(
+    currentSceneName,
+    "GroupSecondaryCam"
+  );
+
+  if (sceneItem) {
+    const { sceneItemId } = sceneItem;
+
+    await obs.setSceneItemEnabled({
+      sceneItemId,
+      sceneName: currentSceneName,
+      sceneItemEnabled: false,
+    });
+
+    console.log(currentSceneName, sceneItemId, false);
+  }
+
+  await obs.setSourceFilterEnabled({
+    sourceName: "4K Video Capture",
+    filterName: "Colour Correction",
+    filterEnabled: true,
   });
-
-  console.log(name, sceneItemId, false);
 })();

@@ -7,18 +7,31 @@ export interface SceneItems {
 export interface sceneItem {
   sceneName: string;
   sceneItemId: number;
-  enabled: boolean;
+  sceneItemEnabled: boolean;
 }
 
-export interface OBSCallable {
+export interface filterItem {
+  sourceName: string;
+  filterName: string;
+  filterEnabled: boolean;
+}
+
+export interface OBSRepositoryInterface {
+  getCurrentScene(): Promise<string>;
+  getSceneSourcesList(sceneName: string): Promise<SceneItems | undefined>;
+  getSceneItem(
+    sceneName: string,
+    sourceName: string
+  ): Promise<{ sceneItemId: number } | undefined>;
+  setSceneItemEnabled(sceneItem: sceneItem): Promise<void>;
+  setSourceFilterEnabled(filterItem: filterItem): Promise<void>;
+}
+
+export interface OBSInterface {
   connect(
-    wb: string | undefined,
-    pass: string | undefined,
+    websocket: string | undefined,
+    password: string | undefined,
     version: { rpcVersion: number }
   ): Promise<any>;
-  getCurrentScene(): Promise<string>;
-  getSceneSourcesList(name: string): Promise<SceneItems>;
-  getSceneItemId(sceneName: string, sourceName: string): Promise<number>;
-  setSceneItemEnabled(sceneItem: sceneItem): Promise<void>;
-  call(eventName: string, data?: any): Promise<any>;
+  call(eventName: string, data?: JsonObject): Promise<any>;
 }

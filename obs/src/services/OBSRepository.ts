@@ -1,6 +1,7 @@
-import OBSWebSocket, { EventSubscription } from "obs-websocket-js";
+import OBSWebSocket from "obs-websocket-js";
+import { OBSCallable, sceneItem } from "../models/OBSModels";
 
-export class OBSService {
+export class OBSRepository {
   private obs: OBSWebSocket;
 
   constructor() {
@@ -26,7 +27,7 @@ export class OBSService {
   }
 
   public async getSceneSourcesList(name: string) {
-    const sources = this.obs.call("GetSceneItemList", {
+    const sources = await this.obs.call("GetSceneItemList", {
       sceneName: name,
     });
 
@@ -34,20 +35,18 @@ export class OBSService {
   }
 
   public async getSceneItemId(sceneName: string, sourceName: string) {
-    const itemId = this.obs.call("GetSceneItemId", {
+    const { sceneItemId } = await this.obs.call("GetSceneItemId", {
       sceneName: sceneName,
       sourceName: sourceName,
     });
 
-    return itemId;
+    return sceneItemId;
   }
 
-  public async setSceneItemEnabled(
-    sceneName: string,
-    sceneItemId: number,
-    enabled: boolean
-  ) {
-    const state = this.obs.call("SetSceneItemEnabled", {
+  public async setSceneItemEnabled(sceneItem: sceneItem) {
+    const { sceneItemId, sceneName, enabled } = sceneItem;
+
+    const state = await this.obs.call("SetSceneItemEnabled", {
       sceneName: sceneName,
       sceneItemId: sceneItemId,
       sceneItemEnabled: enabled,

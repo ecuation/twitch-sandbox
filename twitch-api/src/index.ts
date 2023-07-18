@@ -1,32 +1,31 @@
 import "dotenv/config";
-import { StaticAuthProvider } from "@twurple/auth";
-import { ChatClient } from "@twurple/chat";
-import { ApiClient } from "@twurple/api";
-
-const clientId = process.env.CLIENTID || "";
-const accessToken = process.env.ACCESSTOKEN || "";
-const authProvider = new StaticAuthProvider(clientId, accessToken);
-const apiClient = new ApiClient({ authProvider });
-
-const chatClient = new ChatClient({ authProvider, channels: ["ecuationable"] });
-chatClient.connect();
+import { BotBouncer } from "./services/BotBouncer";
+import { TwitchChatService } from "./services/TwitchChatService";
 
 (async () => {
-  const broadcaster = await apiClient.users.getUserByName("ecuationable");
-  const user = await apiClient.users.getUserByName("retroidmaniac");
+  const twitchService = new TwitchChatService();
+  const broadcasterName = process.env.BROADCASTER || "";
+  const bouncer = new BotBouncer();
 
-  // await apiClient.moderation.banUser(broadcaster.id, broadcaster.id, {
-  //   reason: "testing twitch api",
-  //   user: user.id,
-  // });
+  const today = new Date();
+  const date =
+    today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
+  const time =
+    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  const dateTime = date + " " + time;
 
-  // await apiClient.moderation.unbanUser(broadcaster.id, broadcaster.id, user.id);
-
-  chatClient.onJoin((channel, user) => {
-    console.log("user joined", user, channel);
+  twitchService.chatClient.onJoin((channel, user) => {
+    if (bouncer.checkUserIsBot(user)) {
+      const message = `${user} baneado, es un bot suSio`;
+      twitchService.banUser(user);
+      twitchService.chatClient.say(broadcasterName, message);
+      console.log(message);
+    } else {
+      console.log(`User ${user} joined at ${dateTime}`);
+    }
   });
 
-  chatClient.onMessage(async (channel, user, text, msg) => {
+  twitchService.chatClient.onMessage(async (channel, user, text, msg) => {
     const broadcasterId = msg.channelId;
 
     console.log(`user ${user} ${broadcasterId}`);

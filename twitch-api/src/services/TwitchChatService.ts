@@ -1,12 +1,15 @@
 import { StaticAuthProvider } from "@twurple/auth";
 import { ChatClient } from "@twurple/chat";
 import { ApiClient } from "@twurple/api";
+import * as fs from "fs";
+import path from "path";
 
 export class TwitchChatService {
   public apiClient;
   public chatClient;
 
   private broadcasterName;
+  private lastRaiderFile;
 
   constructor() {
     const clientId = process.env.CLIENTID || "";
@@ -19,7 +22,10 @@ export class TwitchChatService {
     this.chatClient = new ChatClient({
       authProvider,
       channels: [this.broadcasterName],
+      requestMembershipEvents: true,
     });
+
+    this.lastRaiderFile = this.getLastRaiderFileName();
 
     this.chatClient.connect();
   }
@@ -49,5 +55,20 @@ export class TwitchChatService {
       broadcaster!.id,
       user!.id
     );
+  }
+
+  updateLastRaiderFile(username: string) {
+    fs.writeFile(this.lastRaiderFile, username, (err: any) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  }
+
+  getLastRaiderFileName() {
+    const appDir = path.resolve(__dirname, "../../");
+    const fileName = "last_raider.txt";
+
+    return `${appDir}/${fileName}`;
   }
 }

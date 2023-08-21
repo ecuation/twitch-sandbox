@@ -14,6 +14,7 @@ export class BotBouncer {
 
     return `${appDir}/${fileName}`;
   }
+
   async getBotsFromInsights() {
     const response = await fetch("https://api.twitchinsights.net/v1/bots/all");
     const body = await response.text();

@@ -16,13 +16,6 @@ chatClient.connect();
 const broadcaster = await apiClient.users.getUserByName("ecuationable");
 const user = await apiClient.users.getUserByName("retroidmaniac");
 
-// await apiClient.moderation.banUser(broadcaster.id, broadcaster.id, {
-//   reason: "testing twitch api",
-//   user: user.id,
-// });
-
-// await apiClient.moderation.unbanUser(broadcaster.id, broadcaster.id, user.id);
-
 chatClient.onMessage(async (channel, user, text, msg) => {
   const broadcasterId = msg.channelId;
 

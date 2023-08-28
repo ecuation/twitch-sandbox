@@ -15,33 +15,11 @@ import { TwitchChatService } from "./services/TwitchChatService";
   });
 
   twitchService.chatClient.onJoin((channel, user) => {
-    const today = new Date();
-    const date =
-      today.getDate() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getFullYear();
-    const time =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    const dateTime = date + " " + time;
-
-    if (
-      bouncer.checkUserIsBot(user) &&
-      user != "nightbot" &&
-      user != "streamelements"
-    ) {
-      const message = `${user} baneado, es un bot suSio`;
-      twitchService.banUser(user);
-      twitchService.chatClient.say(broadcasterName, message);
-      console.log(message);
-    } else {
-      console.log(`User ${user} joined at ${dateTime}`);
-    }
+    bouncer.watch({ twitchService, user, broadcasterName });
   });
 
   twitchService.chatClient.onMessage(async (channel, user, text, msg) => {
-    const broadcasterId = msg.channelId;
+    if (text === "!autopromo") twitchService.lastRaiderPromo(broadcasterName);
   });
 
   // const scenes = await obs.call("GetSceneList");

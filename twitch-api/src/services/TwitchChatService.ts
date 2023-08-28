@@ -65,6 +65,23 @@ export class TwitchChatService {
     });
   }
 
+  lastRaiderPromo(broadcasterName: string) {
+    return fs.readFile(
+      this.lastRaiderFile,
+      "utf8",
+      (err: any, lastRaider: any) => {
+        if (err) {
+          throw err;
+        }
+
+        this.chatClient.say(
+          broadcasterName,
+          `Besito en el siempre sucio para https://twitch.com/${lastRaider} no te ahueves y dale un follow!`
+        );
+      }
+    );
+  }
+
   getLastRaiderFileName() {
     const appDir = path.resolve(__dirname, "../../");
     const fileName = "last_raider.txt";

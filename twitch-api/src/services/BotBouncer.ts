@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import path from "path";
+import { TwitchChatService } from "./TwitchChatService";
 
 export class BotBouncer {
   private file;
@@ -55,5 +56,41 @@ export class BotBouncer {
   checkUserIsBot(userName: string) {
     const bots = this.readBotsFile();
     return bots.includes(userName);
+  }
+
+  watch(userData: {
+    twitchService: TwitchChatService;
+    user: string;
+    broadcasterName: string;
+  }) {
+    const { twitchService, user, broadcasterName } = userData;
+
+    if (
+      this.checkUserIsBot(user) &&
+      user != "nightbot" &&
+      user != "streamelements"
+    ) {
+      const message = `${user} baneado, es un bot suSio`;
+      twitchService.banUser(user);
+      twitchService.chatClient.say(broadcasterName, message);
+      console.log(message);
+    } else {
+      console.log(`User ${user} joined at ${this.getCurrentDateTime()}`);
+    }
+  }
+
+  getCurrentDateTime(): string {
+    const today = new Date();
+    const date =
+      today.getDate() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getFullYear();
+    const time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const dateTime = date + " " + time;
+
+    return dateTime;
   }
 }

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: twitch-api
+spec:
+  container:
+    - name: twitch-api
+      image: danielcarvajal/twitch-api:0.0.1
+      

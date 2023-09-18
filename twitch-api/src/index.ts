@@ -6,15 +6,15 @@ import { TwitchChatService } from "./services/TwitchChatService";
   const twitchService = new TwitchChatService();
   const broadcasterName = process.env.BROADCASTER || "";
   const bouncer = new BotBouncer();
-
-  twitchService.chatClient.onRaid((channel, user, raidInfo) => {
+  
+  twitchService.chatClient.onRaid((channel: string, user, raidInfo) => {
     const { displayName: raider, viewerCount } = raidInfo;
     if (viewerCount > 2) {
       twitchService.updateLastRaiderFile(raider);
     }
   });
 
-  twitchService.chatClient.onJoin((channel, user) => {
+  twitchService.chatClient.onJoin((channel: string, user) => {
     bouncer.watch({ twitchService, user, broadcasterName });
   });
 

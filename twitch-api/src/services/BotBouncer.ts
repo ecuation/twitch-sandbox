@@ -40,9 +40,11 @@ export class BotBouncer {
     this.writeBotsFile(JSON.stringify(bots));
   }
 
-  readBotsFile(): [string] {
+  readBotsFile(): [string] {  
     const data = fs.readFileSync(this.file, "utf8");
-    const botsData = JSON.parse(data);
+  
+  
+    const botsData = data ? JSON.parse(data) : [];
 
     return botsData;
   }

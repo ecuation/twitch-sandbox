@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "dev": "npx nodemon"
+    "dev": "npx nodemon",
+    "prod": "ts-node --transpile-only ./src/index.ts"
   },
   "keywords": [],
   "author": "",

@@ -22,6 +22,8 @@ import { TwitchChatService } from "./services/TwitchChatService";
     if (text === "!autopromo") twitchService.lastRaiderPromo(broadcasterName);
   });
 
+  console.log('update...');
+  
   // const scenes = await obs.call("GetSceneList");
   // console.log(scenes);
 })();

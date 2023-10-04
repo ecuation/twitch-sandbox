@@ -4,8 +4,9 @@ import { OBSService } from "./services/OBSService";
 const obs = new OBSService();
 
 (async () => {
-  await obs.connect();
 
+  obs.connect();
+  
   const currentSceneName = await obs.getCurrentScene();
 
   console.log(currentSceneName);

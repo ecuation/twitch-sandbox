@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitch-api-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: twitch-api
+  template:
+    metadata:
+      labels:
+        app: twitch-api
+    spec:
+      containers:
+        - name: twitch-api
+          image: ecuationable/twitch-api:latest

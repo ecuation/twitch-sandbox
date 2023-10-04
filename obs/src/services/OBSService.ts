@@ -10,14 +10,19 @@ import OBSWebSocket from "obs-websocket-js";
 export class OBSService implements OBSRepositoryInterface {
   constructor(private obs: OBSInterface = new OBSWebSocket()) {}
 
-  public async connect(): Promise<void> {
-    const { obsWebSocketVersion, negotiatedRpcVersion } =
+  public async connect() {    
+
+    try {
+      const { obsWebSocketVersion, negotiatedRpcVersion } =
       await this.obs.connect(process.env.OBSWS, process.env.OBSPASSWORD, {
         rpcVersion: 1,
       });
-    console.log(
-      `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
-    );
+      console.log(
+        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
+      );  
+    } catch (error: any) {
+        console.error('Failed to connect', error.code, error.message);
+    }
   }
 
   public async getCurrentScene(): Promise<string> {

@@ -42,8 +42,6 @@ export class BotBouncer {
 
   readBotsFile(): [string] {  
     const data = fs.readFileSync(this.file, "utf8");
-  
-  
     const botsData = data ? JSON.parse(data) : [];
 
     return botsData;
